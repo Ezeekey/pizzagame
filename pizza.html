@@ -45,6 +45,8 @@
 		let lastframetime = Date.now();
 		let orderendtime = Date.now();
 		let deltatime = 0;
+		const STANDARDORDERTIME = 12000;		// Amount of time player has to type order.
+
 		let lives = 3;
 
 		let state = 0;
@@ -131,7 +133,7 @@
 				newimage.onload = function () {
 					imagestoload -= 1;
 					if(imagestoload <= 0){
-						state = TYPING;  	// Change later to BEFOREGAMEf
+						state = BEFOREGAME;
 						filltextlists();
 					}
 				}
@@ -150,79 +152,114 @@
 			deltatime = (framestarttime - lastframetime) / 1000;
 
 			switch(state){
-			case LOADING: 
-				drawloadscreen();
-				break;
-			case BEFORETYPING:
-				filltextlists();
-				state = TYPING;
+			
+				case LOADING:
+					render.clearRect(0, 0, 800, 600); 
+					drawloadscreen();
+					break;
+				case BEFOREGAME:
+					// Logic is in keyboard event handler.
 
-				render.clearRect(0, 0, 800, 600);
-				drawbackground();
-				drawcrust(defaultpizzax, defaultpizzay);
-				draworder();
-				drawtimer();
-				drawlives();
-				break;
-			case TYPING:
-				render.clearRect(0, 0, 800, 600);
-				drawbackground();
-				drawcrust(defaultpizzax, defaultpizzay);
-				draworder();
-				drawtimer();
-				drawlives();
-				break;
-			case SUCCESS:
-				pizzax += 800 * deltatime;
+					render.clearRect(0, 0, 800, 600);
+					drawbackground();
+					drawtitle();
+					// Draw score.
+					break;
+				case BEFORETYPING:
+					filltextlists();
+					state = TYPING;
 
-				if(pizzax > 800) {
-					state = BEFORECREATEPIZZA;
-				}
+					render.clearRect(0, 0, 800, 600);
+					drawbackground();
+					drawcrust(defaultpizzax, defaultpizzay);
+					draworder();
+					drawtimer();
+					drawlives();
+					// Draw score.
+					break;
+				case TYPING:
+					// Game logic is in keyboard event handler towards bottom of file.
 
-				render.clearRect(0, 0, 800, 600);
-				drawbackground();
-				drawcrust(defaultpizzax + pizzax, defaultpizzay);
-				drawtimer();
-				drawlives();
-				break;
-			case BEFORECREATEPIZZA:
-				pizzax = -800;
-				// Restart timer.
+					if (framestarttime > orderendtime) {
+						faillogic();
+					}
 
-				state = CREATEPIZZA;
+					render.clearRect(0, 0, 800, 600);
+					drawbackground();
+					drawcrust(defaultpizzax, defaultpizzay);
+					draworder();
+					drawtimer();
+					drawlives();
+					// Draw score.
+					break;
+				case SUCCESS:
+					pizzax += 800 * deltatime;
 
-				render.clearRect(0, 0, 800, 600);
-				drawbackground();
-				drawlives();
-				generateorder();
-				break;
-			case CREATEPIZZA:
-				pizzax += 800 * deltatime;
+					if(pizzax > 800) {
+						state = BEFORECREATEPIZZA;
+					}
 
-				if(pizzax >= 0) {
-					pizzax = 0;
-					state = BEFORETYPING;
-				}
+					render.clearRect(0, 0, 800, 600);
+					drawbackground();
+					drawcrust(defaultpizzax + pizzax, defaultpizzay);
+					drawlives();
+					// Draw score.
+					break;
+				case BEFORECREATEPIZZA:
+					pizzax = -800;
+				
+					if (lives > 0) {
+						orderendtime = framestarttime + STANDARDORDERTIME;
+						generateorder();
+						pizzay = 0;
+						state = CREATEPIZZA;
+					} else {
+						orderendtime = framestarttime + 5000;
+						state = GAMEOVER
+					}
 
-				render.clearRect(0, 0 , 800, 600);
-				drawbackground();
-				drawlives();
-				drawcrust(defaultpizzax + pizzax, defaultpizzay);
-				break;
-			case FAIL:
-				pizzay -= 1600 * deltatime;
+					render.clearRect(0, 0, 800, 600);
+					drawbackground();
+					drawlives();
+					// Draw score.
+					break;
+				case CREATEPIZZA:
+					pizzax += 800 * deltatime;
 
-				if (pizzay < -1000) {
-					state = BEFORECREATEPIZZA
-					pizzay = 0;
-				}
+					if(pizzax >= 0) {
+						pizzax = 0;
+						state = BEFORETYPING;
+					}
 
-				render.clearRect(0, 0, 800, 600);
-				drawbackground();
-				drawlives();
-				drawcrust(defaultpizzax, defaultpizzay + pizzay)
-				draworder();
-				drawtimer();
+					render.clearRect(0, 0 , 800, 600);
+					drawbackground();
+					drawlives();
+					drawcrust(defaultpizzax + pizzax, defaultpizzay);
+					// Draw score.
+					break;
+				case FAIL:
+					pizzay -= 1600 * deltatime;
+
+					if (pizzay < -1000) {
+						state = BEFORECREATEPIZZA
+					}
+
+					render.clearRect(0, 0, 800, 600);
+					drawbackground();
+					drawlives();
+					drawcrust(defaultpizzax, defaultpizzay + pizzay)
+					draworder();
+					// Draw score.
+					break;
+				case GAMEOVER:
+					if (framestarttime > orderendtime) {
+						state = BEFOREGAME;
+					}
+
+					render.clearRect(0, 0, 800, 600);
+					drawbackground();
+					drawgameover();
+					break;
 			}
 			requestAnimationFrame(drawgame);
 		}
@@ -288,11 +325,17 @@
 
 		}
 
+		function drawgameover() {
+			render.font = "60px serif";
+			render.fillStyle = "black";
+			render.fillText("Game over", 150, 200);
+		}
+
 
 		function drawtimer(){
 			render.font = "24px serif";
 			render.fillStyle = "black";
-			render.fillText("Time :00", 675, 30);
+			render.fillText("Time :" + Math.floor((orderendtime - framestarttime) / 1000), 675, 30);
 		}
 
 
@@ -355,34 +398,47 @@
 			}
 		}
 
+		function drawtitle() {
+			render.font = "80px serif";
+			render.fillStyle = "black";
+			render.fillText("Pizza Typer", 150, 200);
+			render.font = "24px serif";
+			render.fillText("Press space to play", 150, 425);
+		}
+
 
 		// Input.
 
 		document.addEventListener("keydown", (event) => {
 			switch(state) {
-			case TYPING: 
-				if(event.key === incompleteingredientarray[0].word.charAt(incompleteingredientarray[0].currentletter)) {	// Player has typed highlighted letter.
-					incompleteingredientarray[0].currentletter += 1;
+				case TYPING: 
+					if(event.key === incompleteingredientarray[0].word.charAt(incompleteingredientarray[0].currentletter)) {	// Player has typed highlighted letter.
+						incompleteingredientarray[0].currentletter += 1;
 
-					if(incompleteingredientarray[0].currentletter == incompleteingredientarray[0].word.length)				// Player has completed a word.
-					{
-						completeingredientarray.push(incompleteingredientarray[0].word);
-						incompleteingredientarray.splice(0, 1);
-					}
+						if(incompleteingredientarray[0].currentletter == incompleteingredientarray[0].word.length)				// Player has completed a word.
+						{
+							completeingredientarray.push(incompleteingredientarray[0].word);
+							incompleteingredientarray.splice(0, 1);
+						}
 
-					if(incompleteingredientarray.length == 0){																// Player has completed order.
-						state = SUCCESS;
-						successlogic();
-					}
-					filltextlists();
-				} else if (event.key === "Shift") {	// Allows capitalization of letters without losing score.
+						if(incompleteingredientarray.length == 0){																// Player has completed order.
+							state = SUCCESS;
+							successlogic();
+						}
+						filltextlists();
+					} else if (event.key === "Shift") {	// Allows capitalization of letters without losing score.
+							// Do nothing.
+					} else if (event.key === "Control" || event.key === "Alt" || event.key === "Tab") { 						// Exclude other inputs like tab, control, and alt so player does not lose score.
 						// Do nothing.
-				} else if (event.key === "Control" || event.key === "Alt" || event.key === "Tab") { 						// Exclude other inputs like tab, control, and alt so player does not lose score.
-					// Do nothing.
-				} else {							// Player fails at typing highlighted letter.
-					faillogic();
-				}
-				break;
+					} else {							// Player fails at typing highlighted letter.
+						faillogic();
+					}
+					break;
+				case BEFOREGAME:
+					if (event.key === " ") {
+						startgame();
+					}
+					break;
 			}
 
 			if(event.keyCode == 32 && event.target == document.body) {		// Prevents page from scrolling down when player presses spacebar. 
@@ -433,6 +489,13 @@
 			lives--;
 		}
 
+		function startgame() { 
+			state = BEFORECREATEPIZZA;
+			score = 0;
+			lives = 3;
+			successcount = 0;
+			wordsperorder = 1;
+		}
 
 		// Game start
 		populategraphicmap();
