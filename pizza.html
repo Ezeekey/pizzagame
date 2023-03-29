@@ -168,6 +168,7 @@
 					break;
 				case BEFORETYPING:
 					filltextlists();
+					// Play ding sound
 					state = TYPING;
 
 					render.clearRect(0, 0, 800, 600);
@@ -423,6 +424,7 @@
 				case TYPING: 
 					if(event.key === incompleteingredientarray[0].word.charAt(incompleteingredientarray[0].currentletter)) {	// Player has typed highlighted letter.
 						incompleteingredientarray[0].currentletter += 1;
+						// Play click sound.
 
 						if(incompleteingredientarray[0].currentletter == incompleteingredientarray[0].word.length)				// Player has completed a word.
 						{
@@ -489,6 +491,7 @@
 		function successlogic() {
 			successcount++;
 			completeingredientarray = [];
+			// Play win sound.
 
 			if (successcount >= LEVELUPTHRESHOLD) {
 				wordsperorder++;
@@ -500,6 +503,7 @@
 			state = FAIL;
 			completeingredientarray = [];
 			lives--;
+			// Play fail sound.
 		}
 
 		function startgame() { 
@@ -508,6 +512,7 @@
 			lives = 3;
 			successcount = 0;
 			wordsperorder = 1;
+			// Start music loop.
 		}
 
 		// Game start
