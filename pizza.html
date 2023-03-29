@@ -163,7 +163,7 @@
 					render.clearRect(0, 0, 800, 600);
 					drawbackground();
 					drawtitle();
-					// Draw score.
+					drawscore();
 					break;
 				case BEFORETYPING:
 					filltextlists();
@@ -175,7 +175,7 @@
 					draworder();
 					drawtimer();
 					drawlives();
-					// Draw score.
+					drawscore();
 					break;
 				case TYPING:
 					// Game logic is in keyboard event handler towards bottom of file.
@@ -190,7 +190,7 @@
 					draworder();
 					drawtimer();
 					drawlives();
-					// Draw score.
+					drawscore();
 					break;
 				case SUCCESS:
 					pizzax += 800 * deltatime;
@@ -203,7 +203,7 @@
 					drawbackground();
 					drawcrust(defaultpizzax + pizzax, defaultpizzay);
 					drawlives();
-					// Draw score.
+					drawscore()
 					break;
 				case BEFORECREATEPIZZA:
 					pizzax = -800;
@@ -221,7 +221,7 @@
 					render.clearRect(0, 0, 800, 600);
 					drawbackground();
 					drawlives();
-					// Draw score.
+					drawscore();
 					break;
 				case CREATEPIZZA:
 					pizzax += 800 * deltatime;
@@ -235,7 +235,7 @@
 					drawbackground();
 					drawlives();
 					drawcrust(defaultpizzax + pizzax, defaultpizzay);
-					// Draw score.
+					drawscore();
 					break;
 				case FAIL:
 					pizzay -= 1600 * deltatime;
@@ -249,7 +249,7 @@
 					drawlives();
 					drawcrust(defaultpizzax, defaultpizzay + pizzay)
 					draworder();
-					// Draw score.
+					drawscore();
 					break;
 				case GAMEOVER:
 					if (framestarttime > orderendtime) {
@@ -309,7 +309,7 @@
 			let textstart = BEGINLINE;
 
 			for (let i = 0; i < 7; i++){
-			render.font = "24px serif";
+			render.font = "20px courier";
 			render.fillStyle = "green";
 			render.fillText(orderlinegreen[i], 10, 430 + (24 * i));
 			measure = render.measureText(orderlinegreen[i]);
@@ -349,6 +349,14 @@
 				lifecounter -= 1;
 			}
 		}
+
+
+		function drawscore() {
+			render.font = "24px serif";
+			render.fillStyle = "black";
+			render.fillText("Score: " + score, 25, 30);
+		}
+
 
 		function cleartextgraphics(){
 			orderlinegreen = ["", "", "", "", "", "", ""];
@@ -402,7 +410,7 @@
 			render.font = "80px serif";
 			render.fillStyle = "black";
 			render.fillText("Pizza Typer", 150, 200);
-			render.font = "24px serif";
+			render.font = "20px courier";
 			render.fillText("Press space to play", 150, 425);
 		}
 
@@ -419,6 +427,8 @@
 						{
 							completeingredientarray.push(incompleteingredientarray[0].word);
 							incompleteingredientarray.splice(0, 1);
+							score += 10;
+							// Put ingredient graphic on pizza.
 						}
 
 						if(incompleteingredientarray.length == 0){																// Player has completed order.
@@ -473,7 +483,6 @@
 		}
 
 		function successlogic() {
-			score += 100;
 			successcount++;
 			completeingredientarray = [];
 
