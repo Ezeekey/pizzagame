@@ -40,6 +40,7 @@
 		let wordsperorder = 1;					// How many words in an order.
 		let successcount = 0;					// How many successful orders have been made by the player.
 		const LEVELUPTHRESHOLD = 5;				// How many successful orders must be made before the game adds more words to order.
+		const NORMALSCOREVALUE = 10;
 
 		let framestarttime = Date.now();
 		let lastframetime = Date.now();
@@ -425,9 +426,9 @@
 
 						if(incompleteingredientarray[0].currentletter == incompleteingredientarray[0].word.length)				// Player has completed a word.
 						{
-							completeingredientarray.push(incompleteingredientarray[0].word);
-							incompleteingredientarray.splice(0, 1);
-							score += 10;
+							removedword = incompleteingredientarray.shift();
+							completeingredientarray.push(removedword.word);
+							score += removedword.score;
 							// Put ingredient graphic on pizza.
 						}
 
@@ -468,16 +469,19 @@
 			const firstletter = newword.charAt(0).toUpperCase();
 			const restofword = newword.slice(1);
 
-			incompleteingredientarray.push({"word": firstletter + restofword, "currentletter": 0}); //{"word": "pizza", "currentletter": 0}
+			incompleteingredientarray.push({"word": firstletter + restofword, "currentletter": 0, 
+											"graphic": wordlist[randomnumber].graphic, "score": NORMALSCOREVALUE}); 
+
 			remainingwords--;
 
 			while(remainingwords > 0) {
 				// Add comma first.
-				incompleteingredientarray.push({"word": ", ", "currentletter": 0});
+				incompleteingredientarray.push({"word": ", ", "currentletter": 0, "graphic": "", "score": 0});
 
 				// Add word.
 				randomnumber = Math.floor(Math.random() * WORDLISTLENGTH);
-				incompleteingredientarray.push({"word": wordlist[randomnumber].word, "currentletter": 0});
+				incompleteingredientarray.push({"word": wordlist[randomnumber].word, "currentletter": 0,
+												"graphic": wordlist[randomnumber].graphic, "score": NORMALSCOREVALUE});
 				remainingwords--;
 			}
 		}
