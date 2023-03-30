@@ -111,6 +111,12 @@
 		const GAMEOVER = 9;
 		const BEFORETYPING = 10;
 
+		// Sounds
+		ding = "sounds/orderbell.mp3";
+		fail = "sounds/no.mp3";
+		success = "sounds/success.mp3";
+		click = "sounds/click.mp3";
+
 		// Graphics
 
 		const defaultpizzax = 400;
@@ -168,7 +174,7 @@
 					break;
 				case BEFORETYPING:
 					filltextlists();
-					// Play ding sound
+					playsound(ding);
 					state = TYPING;
 
 					render.clearRect(0, 0, 800, 600);
@@ -416,6 +422,16 @@
 			render.fillText("Press space to play", 150, 425);
 		}
 
+		function playsound(sound) {
+			let playedsound = document.createElement("audio");
+			playedsound.src = sound;
+			document.body.appendChild(playedsound);
+			playedsound.play();
+
+			playedsound.onended = function () {
+				this.parentNode.removeChild();
+			}
+		}
 
 		// Input.
 
@@ -424,7 +440,7 @@
 				case TYPING: 
 					if(event.key === incompleteingredientarray[0].word.charAt(incompleteingredientarray[0].currentletter)) {	// Player has typed highlighted letter.
 						incompleteingredientarray[0].currentletter += 1;
-						// Play click sound.
+						playsound(click);
 
 						if(incompleteingredientarray[0].currentletter == incompleteingredientarray[0].word.length)				// Player has completed a word.
 						{
@@ -491,7 +507,7 @@
 		function successlogic() {
 			successcount++;
 			completeingredientarray = [];
-			// Play win sound.
+			playsound(success);
 
 			if (successcount >= LEVELUPTHRESHOLD) {
 				wordsperorder++;
@@ -503,7 +519,7 @@
 			state = FAIL;
 			completeingredientarray = [];
 			lives--;
-			// Play fail sound.
+			playsound(fail);
 		}
 
 		function startgame() { 
