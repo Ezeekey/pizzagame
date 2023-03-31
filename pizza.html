@@ -185,7 +185,7 @@
 					// Game logic is in keyboard event handler towards bottom of file.
 
 					if (framestarttime > orderendtime) {
-						faillogic();
+						faillogic(fail);		// Replace with a sound saying too slow.
 					}
 
 					render.clearRect(0, 0, 800, 600);
@@ -456,7 +456,7 @@
 					} else if (event.key === "Control" || event.key === "Alt" || event.key === "Tab") { 						// Exclude other inputs like tab, control, and alt so player does not lose score.
 						// Do nothing.
 					} else {							// Player fails at typing highlighted letter.
-						faillogic();
+						faillogic(fail);
 					}
 					break;
 				case BEFOREGAME:
@@ -511,11 +511,11 @@
 			}
 		}
 
-		function faillogic() {
+		function faillogic(sound) {
 			state = FAIL;
 			completeingredientarray = [];
 			lives--;
-			playsound(fail);
+			playsound(sound);
 		}
 
 		function startgame() { 
