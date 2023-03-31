@@ -60,11 +60,11 @@
 
 		// List of words.			Add word graphics much later.
 		const wordlist = [
-			{"word": "pepperoni", "graphic": "check.png"},
-			{"word": "mozzarella", "graphic": "check.png"},
-			{"word": "bell pepper", "graphic": "check.png"},
-			{"word": "tomato", "graphic": "check.png"},
-			{"word": "olive", "graphic": "check.png"}
+			{"word": "pepperoni", "graphic": "dummy.png"},
+			{"word": "mozzarella", "graphic": "dummy.png"},
+			{"word": "bell pepper", "graphic": "dummy.png"},
+			{"word": "tomato", "graphic": "dummy.png"},
+			{"word": "olive", "graphic": "dummy.png"}
 		];
 
 		const WORDLISTLENGTH = wordlist.length;
@@ -123,7 +123,7 @@
 
 		window.requestAnimationFrame(drawgame);
 		let srcarray = [
-			"check.png", "x.png"
+			"check.png", "x.png", "dummy.png"
 			]
 		let imagestoload = srcarray.length;		// This integer will be used to check if every graphic has been loaded before launching the game.
 
@@ -369,8 +369,8 @@
 			// Put 5 toppings at random spots on pizza.
 			console.log("droptoppings called.");
 			for (let i = 5; i > 0; i--) {
-				newX = Math.random() * 350 + 225;
-				newY = Math.random() * 350 + 25;
+				newX = Math.random() * 250 + 225;
+				newY = Math.random() * 250 + 25;
 
 				toppingarray.push(
 					{"graphic":graphic, 
