@@ -23,8 +23,7 @@
 	</head>
 
 	<body>
-		<audio src="malt.mp3" controls></audio>
-		<p>&nbsp</p>
+		<br>
 		<div class="gamediv">
 			<canvas id="pizzagame" class="game" width="800" height="600">Pizza did not load</canvas>
 		</div>
@@ -53,12 +52,9 @@
 		let state = 0;
 
 
-		let completeingredientarray = 
-			[];
+		let completeingredientarray = [];
 
-		let incompleteingredientarray = 
-			[{"word": "pizza", "currentletter": 0}
-			];
+		let incompleteingredientarray = [];
 
 		// List of words.			Add word graphics much later.
 		const wordlist = [
@@ -528,7 +524,6 @@
 			lives = 3;
 			successcount = 0;
 			wordsperorder = 1;
-			// Start music loop.
 		}
 
 		// Game start
