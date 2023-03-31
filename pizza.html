@@ -56,13 +56,15 @@
 
 		let incompleteingredientarray = [];
 
+		let toppingarray = [];	// Should contain objects like this {graphic: '', x:0, y:0}
+
 		// List of words.			Add word graphics much later.
 		const wordlist = [
-			{"word": "pepperoni", "graphic": ""},
-			{"word": "mozzarella", "graphic": ""},
-			{"word": "bell pepper", "graphic": ""},
-			{"word": "tomato", "graphic": ""},
-			{"word": "olive", "graphic": ""}
+			{"word": "pepperoni", "graphic": "check.png"},
+			{"word": "mozzarella", "graphic": "check.png"},
+			{"word": "bell pepper", "graphic": "check.png"},
+			{"word": "tomato", "graphic": "check.png"},
+			{"word": "olive", "graphic": "check.png"}
 		];
 
 		const WORDLISTLENGTH = wordlist.length;
@@ -96,12 +98,10 @@
 
 		// Enumerations for the state machine.
 		const LOADING = 0;
-		const BEFOREGAME = 1;
+		const TITLE = 1;
 		const CREATEPIZZA = 2;
 		const TYPING = 3;
-		const BEGINSUCCESS = 4
 		const SUCCESS = 5;
-		const BEGINFAIL = 6;
 		const FAIL = 7;
 		const BEFORECREATEPIZZA = 8;
 		const GAMEOVER = 9;
@@ -136,7 +136,7 @@
 				newimage.onload = function () {
 					imagestoload -= 1;
 					if(imagestoload <= 0){
-						state = BEFOREGAME;
+						state = TITLE;
 						filltextlists();
 					}
 				}
@@ -160,7 +160,7 @@
 					render.clearRect(0, 0, 800, 600); 
 					drawloadscreen();
 					break;
-				case BEFOREGAME:
+				case TITLE:
 					// Logic is in keyboard event handler.
 
 					render.clearRect(0, 0, 800, 600);
@@ -191,6 +191,7 @@
 					render.clearRect(0, 0, 800, 600);
 					drawbackground();
 					drawcrust(defaultpizzax, defaultpizzay);
+					drawtoppings();
 					draworder();
 					drawtimer();
 					drawlives();
@@ -206,6 +207,7 @@
 					render.clearRect(0, 0, 800, 600);
 					drawbackground();
 					drawcrust(defaultpizzax + pizzax, defaultpizzay);
+					drawtoppings();
 					drawlives();
 					drawscore()
 					break;
@@ -252,12 +254,13 @@
 					drawbackground();
 					drawlives();
 					drawcrust(defaultpizzax, defaultpizzay + pizzay)
+					drawtoppings();
 					draworder();
 					drawscore();
 					break;
 				case GAMEOVER:
 					if (framestarttime > orderendtime) {
-						state = BEFOREGAME;
+						state = TITLE;
 					}
 
 					render.clearRect(0, 0, 800, 600);
@@ -361,6 +364,35 @@
 			render.fillText("Score: " + score, 25, 30);
 		}
 
+		
+		function droptoppings(graphic) {
+			// Put 5 toppings at random spots on pizza.
+			console.log("droptoppings called.");
+			for (let i = 5; i > 0; i--) {
+				newX = Math.random() * 350 + 225;
+				newY = Math.random() * 350 + 25;
+
+				toppingarray.push(
+					{"graphic":graphic, 
+					"x": newX, 
+					"y": newY});
+					console.log("topping dropped");
+					console.log("x: " + newX);
+					console.log("y: " + newY);
+			}
+		}
+
+
+		function drawtoppings() {
+			// Go through array of toppings, and draw each of them
+			// with a modifier for pizza position.
+
+			for (let i = 0; i < toppingarray.length; i++) {
+				render.drawImage(graphicdict.get(toppingarray[i].graphic), toppingarray[i].x + pizzax, toppingarray[i].y + pizzay);
+				console.log("I'm trying to draw!");
+			}
+		}
+
 
 		function cleartextgraphics(){
 			orderlinegreen = ["", "", "", "", "", "", ""];
@@ -425,7 +457,7 @@
 			playedsound.play();
 
 			playedsound.onended = function () {
-				this.parentNode.removeChild();
+				this.parentNode.removeChild(playedsound);
 			}
 		}
 
@@ -443,7 +475,9 @@
 							removedword = incompleteingredientarray.shift();
 							completeingredientarray.push(removedword.word);
 							score += removedword.score;
-							// Put ingredient graphic on pizza.
+							if (removedword.graphic != "") {
+								droptoppings(removedword.graphic);
+							}
 						}
 
 						if(incompleteingredientarray.length == 0){																// Player has completed order.
@@ -459,7 +493,7 @@
 						faillogic(fail);
 					}
 					break;
-				case BEFOREGAME:
+				case TITLE:
 					if (event.key === " ") {
 						startgame();
 					}
@@ -476,6 +510,7 @@
 		function generateorder() {
 			let remainingwords = wordsperorder;
 			incompleteingredientarray = [];
+			toppingarray = [];
 
 			// Pick random word from list, reduce remainingwords by 1, and capitalizes first word.
 			let randomnumber = Math.floor(Math.random() * WORDLISTLENGTH);
