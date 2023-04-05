@@ -60,29 +60,36 @@
 
 		// List of words.			Add word graphics much later.
 		const wordlist = [
-			{"word": "pepperoni", "graphic": "dummy.png"},
-			{"word": "mozzarella", "graphic": "dummy.png"},
+			{"word": "pepperoni", "graphic": "pepperoni.png"},
+			{"word": "mozzarella", "graphic": "mozzarella.png"},
 			{"word": "bell pepper", "graphic": "dummy.png"},
-			{"word": "tomato", "graphic": "dummy.png"},
-			{"word": "olive", "graphic": "dummy.png"},
+			{"word": "tomato", "graphic": "tomato.png"},
+			{"word": "olive", "graphic": "olive.png"},
 			{"word": "sausage", "graphic": "dummy.png"},
-			{"word": "chicken", "graphic": "dummy.png"},
-			{"word": "pineapple", "graphic": "dummy.png"},
+			{"word": "chicken", "graphic": "chicken.png"},
+			{"word": "pineapple", "graphic": "pineapple.png"},
 			{"word": "bacon", "graphic": "dummy.png"},
-			{"word": "onions", "graphic": "dummy.png"},
-			{"word": "anchovies", "graphic": "dummy.png"},
+			{"word": "onions", "graphic": "onions.png"},
+			{"word": "anchovies", "graphic": "anchovies.png"},
 			{"word": "jalapeno", "graphic": "dummy.png"},
-			{"word": "ham", "graphic": "dummy.png"},
-			{"word": "car", "graphic": "dummy.png"},
-			{"word": "crowbar", "graphic": "dummy.png"},
-			{"word": "beans", "graphic": "dummy.png"},
-			{"word": "alfredo", "graphic": "dummy.png"},
+			{"word": "ham", "graphic": "ham.png"},
+			{"word": "car", "graphic": "car.png"},				// For dirty version.
+			{"word": "crowbar", "graphic": "dummy.png"},		// For dirty version.
+			{"word": "beans", "graphic": "beans.png"},
+			{"word": "alfredo", "graphic": "alfredo.png"},
 			{"word": "pickle", "graphic": "dummy.png"},
-			{"word": "mayonnaise", "graphic": "dummy.png"},
-			{"word": "ranch", "graphic": "dummy.png"},
+			{"word": "mayonnaise", "graphic": "mayo.png"},
+			{"word": "ranch", "graphic": "ranch.png"},
 			{"word": "buffalo", "graphic": "dummy.png"},
-			{"word": "macaroni", "graphic": "dummy.png"},
-			{"word": "grape", "graphic": "dummy.png"}
+			{"word": "macaroni", "graphic": "macaroni.png"},
+			{"word": "grape", "graphic": "grape.png"},
+			{"word": "pizza", "graphic": "dummy.png"},
+			{"word": "bleu cheese", "graphic": "dummy.png"},
+			{"word": "meth", "graphic": "dummy.png"},			// For dirty version.
+			{"word": "apple", "graphic": "dummy.png"},
+			{"word": "pear", "graphic": "dummy.png"},
+			{"word": "garlic", "graphic": "dummy.png"},
+			{"word": "basil", "graphic": "dummy.png"}
 		];
 
 		const WORDLISTLENGTH = wordlist.length;
@@ -141,7 +148,9 @@
 
 		window.requestAnimationFrame(drawgame);
 		let srcarray = [
-			"check.png", "x.png", "dummy.png"
+			"check.png", "x.png", "dummy.png", "beans.png", "chicken.png", "ham.png", "macaroni.png",
+			"mayo.png", "onions.png", "pepperoni.png", "tomato.png", "alfredo.png", "anchovies.png",
+			"car.png", "grape.png", "mozzarella.png", "olive.png", "pineapple.png", "ranch.png"
 			]
 		let imagestoload = srcarray.length;		// This integer will be used to check if every graphic has been loaded before launching the game.
 
