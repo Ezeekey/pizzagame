@@ -57,7 +57,8 @@ const canvas = document.getElementById("pizzagame");
 			{"word": "apple", "graphic": "dummy.png"},
 			{"word": "pear", "graphic": "dummy.png"},
 			{"word": "garlic", "graphic": "dummy.png"},
-			{"word": "basil", "graphic": "dummy.png"}
+			{"word": "basil", "graphic": "dummy.png"},
+            {"word": "tofu", "graphic": "dummy.png"}
 		];
 
 		const WORDLISTLENGTH = wordlist.length;
@@ -112,7 +113,7 @@ const canvas = document.getElementById("pizzagame");
 		const defaultpizzay = 200;
 
         const toppingpositionsx = [225, 400, 225, 400, 350];
-        const toppingpositionsy = [50, 50, 250, 250, 150];
+        const toppingpositionsy = [50, 50, 200, 200, 150];
 
 		let pizzax = 0;
 		let pizzay = 0;
@@ -365,8 +366,6 @@ const canvas = document.getElementById("pizzagame");
 		
 		function droptoppings(graphic) {
 			// Put 5 toppings at random spots on pizza.
-
-            // TODO: Change algorithm so toppings are dropped in a more even fashion.
 			for (let i = 4; i >= 0; i--) {
 				newX = Math.random() * 150 + toppingpositionsx[i];
 				newY = Math.random() * 150 + toppingpositionsy[i];
