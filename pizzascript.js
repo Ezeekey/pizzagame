@@ -364,19 +364,17 @@ const canvas = document.getElementById("pizzagame");
 			// Put 5 toppings at random spots on pizza.
 
             // TODO: Change algorithm so toppings are dropped in a more even fashion.
-            //      Also add rotation to toppings as they drop.
 			console.log("droptoppings called.");
 			for (let i = 5; i > 0; i--) {
-				newX = Math.random() * 250 + 225;
-				newY = Math.random() * 250 + 25;
+				newX = Math.random() * 250 + 250;
+				newY = Math.random() * 250 + 50;
+                newR = Math.random() * 6.28;
 
 				toppingarray.push(
 					{"graphic":graphic, 
 					"x": newX, 
-					"y": newY});
-					console.log("topping dropped");
-					console.log("x: " + newX);
-					console.log("y: " + newY);
+					"y": newY,
+                    "r": newR});
 			}
 		}
 
@@ -386,8 +384,12 @@ const canvas = document.getElementById("pizzagame");
 			// with a modifier for pizza position.
 
 			for (let i = 0; i < toppingarray.length; i++) {
-				render.drawImage(graphicdict.get(toppingarray[i].graphic), toppingarray[i].x + pizzax, toppingarray[i].y + pizzay);
-				console.log("I'm trying to draw!");
+				// render.drawImage(graphicdict.get(toppingarray[i].graphic), toppingarray[i].x + pizzax, toppingarray[i].y + pizzay);
+                render.save();
+                render.translate(toppingarray[i].x + pizzax, toppingarray[i].y + pizzay);
+                render.rotate(toppingarray[i].r);
+                render.drawImage(graphicdict.get(toppingarray[i].graphic), -50, -50);
+                render.restore();
 			}
 		}
 
