@@ -30,30 +30,29 @@ const canvas = document.getElementById("pizzagame");
 		const wordlist = [
 			{"word": "pepperoni", "graphic": "pepperoni.png"},
 			{"word": "mozzarella", "graphic": "mozzarella.png"},
-			{"word": "bell pepper", "graphic": "dummy.png"},
+			{"word": "bell pepper", "graphic": "bellpepper.png"},
 			{"word": "tomato", "graphic": "tomato.png"},
 			{"word": "olive", "graphic": "olive.png"},
-			{"word": "sausage", "graphic": "dummy.png"},
+			{"word": "sausage", "graphic": "sausage.png"},
 			{"word": "chicken", "graphic": "chicken.png"},
 			{"word": "pineapple", "graphic": "pineapple.png"},
-			{"word": "bacon", "graphic": "dummy.png"},
+			{"word": "bacon", "graphic": "bacon.png"},
 			{"word": "onions", "graphic": "onions.png"},
 			{"word": "anchovies", "graphic": "anchovies.png"},
-			{"word": "jalapeno", "graphic": "dummy.png"},
+			{"word": "jalapeno", "graphic": "jalapeno.png"},
 			{"word": "ham", "graphic": "ham.png"},
 			{"word": "car", "graphic": "car.png"},
-			{"word": "crowbar", "graphic": "dummy.png"},
+			{"word": "crowbar", "graphic": "crowbar.png"},
 			{"word": "beans", "graphic": "beans.png"},
 			{"word": "alfredo", "graphic": "alfredo.png"},
-			{"word": "pickle", "graphic": "dummy.png"},
+			{"word": "pickle", "graphic": "pickle.png"},
 			{"word": "mayonnaise", "graphic": "mayo.png"},
 			{"word": "ranch", "graphic": "ranch.png"},
-			{"word": "buffalo", "graphic": "dummy.png"},
+			{"word": "buffalo", "graphic": "buffalo.png"},
 			{"word": "macaroni", "graphic": "macaroni.png"},
 			{"word": "grape", "graphic": "grape.png"},
 			{"word": "pizza", "graphic": "dummy.png"},
 			{"word": "bleu cheese", "graphic": "dummy.png"},
-			{"word": "meth", "graphic": "dummy.png"},			// Remove for clean version.
 			{"word": "apple", "graphic": "dummy.png"},
 			{"word": "pear", "graphic": "dummy.png"},
 			{"word": "garlic", "graphic": "dummy.png"},
@@ -107,6 +106,8 @@ const canvas = document.getElementById("pizzagame");
 		success = "sounds/success.mp3";
 		click = "sounds/click.mp3";
 
+		volume = 1.0;
+
 		// Graphics
 
 		const defaultpizzax = 400;
@@ -122,7 +123,9 @@ const canvas = document.getElementById("pizzagame");
 		let srcarray = [
 			"check.png", "x.png", "dummy.png", "beans.png", "chicken.png", "ham.png", "macaroni.png",
 			"mayo.png", "onions.png", "pepperoni.png", "tomato.png", "alfredo.png", "anchovies.png",
-			"car.png", "grape.png", "mozzarella.png", "olive.png", "pineapple.png", "ranch.png"
+			"car.png", "grape.png", "mozzarella.png", "olive.png", "pineapple.png", "ranch.png",
+			"bacon.png", "bellpepper.png", "buffalo.png", "crowbar.png", "jalapeno.png", "pickle.png",
+			"sausage.png"
 			]
 		let imagestoload = srcarray.length;		// This integer will be used to check if every graphic has been loaded before launching the game.
 
@@ -453,6 +456,7 @@ const canvas = document.getElementById("pizzagame");
 		function playsound(sound) {
 			let playedsound = document.createElement("audio");
 			playedsound.src = sound;
+			playedsound.volume = volume;
 			document.body.appendChild(playedsound);
 			playedsound.play();
 
@@ -489,7 +493,7 @@ const canvas = document.getElementById("pizzagame");
 							// Do nothing.
 					} else if (event.key === "Control" || event.key === "Alt" || event.key === "Tab") { 						// Exclude other inputs like tab, control, and alt so player does not lose score.
 						// Do nothing.
-					} else {							// Player fails at typing highlighted letter.
+					} else {								// Player fails at typing highlighted letter.
 						faillogic(fail);
 					}
 					break;
@@ -499,8 +503,16 @@ const canvas = document.getElementById("pizzagame");
 					}
 					break;
 			}
+			
+			if (event.key === "ArrowUp") {
+				volume < 0.89 ? volume += 0.1 : volume = 0.99;
+				playsound(click);
+			} else if (event.key === "ArrowDown") {
+				volume > 0.11 ? volume -= 0.1 : volume = 0.01;
+				playsound(click);
+			}
 
-			if(event.keyCode == 32 && event.target == document.body) {		// Prevents page from scrolling down when player presses spacebar. 
+			if((event.key === " " || event.key === "ArrowDown" || event.key === "ArrowUp") && event.target === document.body) {		// Prevents page from scrolling down when player presses spacebar. 
 				event.preventDefault();
 			}
 		})
