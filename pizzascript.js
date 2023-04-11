@@ -3,6 +3,7 @@ const canvas = document.getElementById("pizzagame");
 
 
 		// Game variables
+		let highscore = 0;
 		let score = 0;
 		let wordsperorder = 1;					// How many words in an order.
 		let successcount = 0;					// How many successful orders have been made by the player.
@@ -57,7 +58,8 @@ const canvas = document.getElementById("pizzagame");
 			{"word": "pear", "graphic": "dummy.png"},
 			{"word": "garlic", "graphic": "dummy.png"},
 			{"word": "basil", "graphic": "dummy.png"},
-            {"word": "tofu", "graphic": "dummy.png"}
+            {"word": "tofu", "graphic": "dummy.png"},
+			{"word": "pesto", "graphic": "dummy.png"}
 		];
 
 		const WORDLISTLENGTH = wordlist.length;
@@ -364,6 +366,7 @@ const canvas = document.getElementById("pizzagame");
 			render.font = "24px serif";
 			render.fillStyle = "black";
 			render.fillText("Score: " + score, 25, 30);
+			render.fillText("High score: " + highscore, 25, 55);
 		}
 
 		
@@ -479,6 +482,7 @@ const canvas = document.getElementById("pizzagame");
 							removedword = incompleteingredientarray.shift();
 							completeingredientarray.push(removedword.word);
 							score += removedword.score;
+							sethighscore();
 							if (removedword.graphic != "") {
 								droptoppings(removedword.graphic);
 							}
@@ -571,6 +575,12 @@ const canvas = document.getElementById("pizzagame");
 			lives = 3;
 			successcount = 0;
 			wordsperorder = 1;
+		}
+
+		function sethighscore() {
+			if (score > highscore) {
+				highscore = score;
+			}
 		}
 
 		// Game start
