@@ -108,7 +108,7 @@ const canvas = document.getElementById("pizzagame");
 		success = "sounds/success.mp3";
 		click = "sounds/click.mp3";
 
-		volume = 1.0;
+		volume = 10;
 
 		// Graphics
 
@@ -459,7 +459,7 @@ const canvas = document.getElementById("pizzagame");
 		function playsound(sound) {
 			let playedsound = document.createElement("audio");
 			playedsound.src = sound;
-			playedsound.volume = volume;
+			playedsound.volume = volume / 10;
 			document.body.appendChild(playedsound);
 			playedsound.play();
 
@@ -509,10 +509,10 @@ const canvas = document.getElementById("pizzagame");
 			}
 			
 			if (event.key === "ArrowUp") {
-				volume < 0.89 ? volume += 0.1 : volume = 0.99;
+				volume < 10 ? volume += 1 : volume = 10;
 				playsound(click);
 			} else if (event.key === "ArrowDown") {
-				volume > 0.11 ? volume -= 0.1 : volume = 0.01;
+				volume > 0 ? volume -= 1 : volume = 0;
 				playsound(click);
 			}
 
