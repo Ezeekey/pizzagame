@@ -171,6 +171,7 @@ const canvas = document.getElementById("pizzagame");
 					drawbackground();
 					drawtitle();
 					drawscore();
+					drawSoundVolume();
 					break;
 				case BEFORETYPING:
 					filltextlists();
@@ -184,6 +185,7 @@ const canvas = document.getElementById("pizzagame");
 					drawtimer();
 					drawlives();
 					drawscore();
+					drawSoundVolume();
 					break;
 				case TYPING:
 					// Game logic is in keyboard event handler towards bottom of file.
@@ -200,6 +202,7 @@ const canvas = document.getElementById("pizzagame");
 					drawtimer();
 					drawlives();
 					drawscore();
+					drawSoundVolume();
 					break;
 				case SUCCESS:
 					pizzax += 800 * deltatime;
@@ -214,6 +217,7 @@ const canvas = document.getElementById("pizzagame");
 					drawtoppings();
 					drawlives();
 					drawscore()
+					drawSoundVolume();
 					break;
 				case BEFORECREATEPIZZA:
 					pizzax = -800;
@@ -232,6 +236,7 @@ const canvas = document.getElementById("pizzagame");
 					drawbackground();
 					drawlives();
 					drawscore();
+					drawSoundVolume()
 					break;
 				case CREATEPIZZA:
 					pizzax += 800 * deltatime;
@@ -246,6 +251,7 @@ const canvas = document.getElementById("pizzagame");
 					drawlives();
 					drawcrust(defaultpizzax + pizzax, defaultpizzay);
 					drawscore();
+					drawSoundVolume();
 					break;
 				case FAIL:
 					pizzay -= 1600 * deltatime;
@@ -261,6 +267,7 @@ const canvas = document.getElementById("pizzagame");
 					drawtoppings();
 					draworder();
 					drawscore();
+					drawSoundVolume();
 					break;
 				case GAMEOVER:
 					if (framestarttime > orderendtime) {
@@ -273,6 +280,13 @@ const canvas = document.getElementById("pizzagame");
 					break;
 			}
 			requestAnimationFrame(drawgame);
+		}
+
+
+		function drawSoundVolume() {
+			render.font = "24px serif";
+			render.fillStyle = "black";
+			render.fillText("Sound volume : " + volume, 15, 580);
 		}
 
 
