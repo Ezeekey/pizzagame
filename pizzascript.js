@@ -468,6 +468,7 @@ const canvas = document.getElementById("pizzagame");
 			render.fillText("Pizza Typer", 150, 200);
 			render.font = "20px courier";
 			render.fillText("Press space to play", 150, 425);
+			render.fillText("Press up and down arrows to change volume", 25, 550);
 		}
 
 		function playsound(sound) {
