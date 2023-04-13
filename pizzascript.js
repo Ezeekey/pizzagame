@@ -9,6 +9,7 @@ const canvas = document.getElementById("pizzagame");
 		let successcount = 0;					// How many successful orders have been made by the player.
 		const LEVELUPTHRESHOLD = 5;				// How many successful orders must be made before the game adds more words to order.
 		const NORMALSCOREVALUE = 10;
+		const EXTRALIFESCORE = 400;				// What score the player needs to get to earn an extra life.
 
 		let framestarttime = Date.now();
 		let lastframetime = Date.now();
@@ -103,10 +104,11 @@ const canvas = document.getElementById("pizzagame");
 		const BEFORETYPING = 10;
 
 		// Sounds
-		ding = "sounds/orderbell.mp3";
-		fail = "sounds/no.mp3";
-		success = "sounds/success.mp3";
-		click = "sounds/click.mp3";
+		dingSound = "sounds/orderbell.mp3";
+		failSound = "sounds/no.mp3";
+		successSound = "sounds/success.mp3";
+		clickSound = "sounds/click.mp3";
+		tooSlowSound = "sounds/tooslow.mp3";
 
 		volume = 10;
 
@@ -175,7 +177,7 @@ const canvas = document.getElementById("pizzagame");
 					break;
 				case BEFORETYPING:
 					filltextlists();
-					playsound(ding);
+					playsound(dingSound);
 					state = TYPING;
 
 					render.clearRect(0, 0, 800, 600);
@@ -191,7 +193,7 @@ const canvas = document.getElementById("pizzagame");
 					// Game logic is in keyboard event handler towards bottom of file.
 
 					if (framestarttime > orderendtime) {
-						faillogic(fail);		// Replace with a sound saying too slow.
+						faillogic(tooSlowSound);
 					}
 
 					render.clearRect(0, 0, 800, 600);
@@ -489,7 +491,7 @@ const canvas = document.getElementById("pizzagame");
 				case TYPING: 
 					if(event.key === incompleteingredientarray[0].word.charAt(incompleteingredientarray[0].currentletter)) {	// Player has typed highlighted letter.
 						incompleteingredientarray[0].currentletter += 1;
-						playsound(click);
+						playsound(clickSound);
 
 						if(incompleteingredientarray[0].currentletter == incompleteingredientarray[0].word.length)				// Player has completed a word.
 						{
@@ -507,12 +509,11 @@ const canvas = document.getElementById("pizzagame");
 							successlogic();
 						}
 						filltextlists();
-					} else if (event.key === "Shift") {	// Allows capitalization of letters without losing score.
-							// Do nothing.
-					} else if (event.key === "Control" || event.key === "Alt" || event.key === "Tab") { 						// Exclude other inputs like tab, control, and alt so player does not lose score.
+					} else if (event.key === "Control" || event.key === "Alt" || event.key === "Tab" || event.key === "Shift"
+								|| event.key === "ArrowUp" || event.key === "ArrowDown") { 						// Exclude other inputs like tab, control, and alt so player does not lose score.
 						// Do nothing.
 					} else {								// Player fails at typing highlighted letter.
-						faillogic(fail);
+						faillogic(failSound);
 					}
 					break;
 				case TITLE:
@@ -524,10 +525,10 @@ const canvas = document.getElementById("pizzagame");
 			
 			if (event.key === "ArrowUp") {
 				volume < 10 ? volume += 1 : volume = 10;
-				playsound(click);
+				playsound(clickSound);
 			} else if (event.key === "ArrowDown") {
 				volume > 0 ? volume -= 1 : volume = 0;
-				playsound(click);
+				playsound(clickSound);
 			}
 
 			if((event.key === " " || event.key === "ArrowDown" || event.key === "ArrowUp") && event.target === document.body) {		// Prevents page from scrolling down when player presses spacebar. 
@@ -568,7 +569,7 @@ const canvas = document.getElementById("pizzagame");
 		function successlogic() {
 			successcount++;
 			completeingredientarray = [];
-			playsound(success);
+			playsound(successSound);
 
 			if (successcount >= LEVELUPTHRESHOLD) {
 				wordsperorder++;
@@ -594,6 +595,16 @@ const canvas = document.getElementById("pizzagame");
 		function sethighscore() {
 			if (score > highscore) {
 				highscore = score;
+			}
+		}
+
+		function extraLife() {
+			// Checks if the player has earned 400 points. If so, then check if the player has less than three lives. If so, give extra life.
+			if ( score % EXTRALIFESCORE === 0) {
+				if (lives < 3) {
+					lives++;
+					playsound(extraLifeSound);
+				}
 			}
 		}
 
