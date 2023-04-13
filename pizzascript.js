@@ -53,14 +53,14 @@ const canvas = document.getElementById("pizzagame");
 			{"word": "buffalo", "graphic": "buffalo.png"},
 			{"word": "macaroni", "graphic": "macaroni.png"},
 			{"word": "grape", "graphic": "grape.png"},
-			{"word": "pizza", "graphic": "dummy.png"},
-			{"word": "bleu cheese", "graphic": "dummy.png"},
-			{"word": "apple", "graphic": "dummy.png"},
-			{"word": "pear", "graphic": "dummy.png"},
-			{"word": "garlic", "graphic": "dummy.png"},
-			{"word": "basil", "graphic": "dummy.png"},
-            {"word": "tofu", "graphic": "dummy.png"},
-			{"word": "pesto", "graphic": "dummy.png"}
+			{"word": "pizza", "graphic": "pizza.png"},
+			{"word": "bleu cheese", "graphic": "bleu.png"},
+			{"word": "apple", "graphic": "apple.png"},
+			{"word": "pear", "graphic": "pear.png"},
+			{"word": "garlic", "graphic": "garlic.png"},
+			{"word": "basil", "graphic": "basil.png"},
+            {"word": "tofu", "graphic": "tofu.png"},
+			{"word": "pesto", "graphic": "pesto.png"}
 		];
 
 		const WORDLISTLENGTH = wordlist.length;
@@ -118,8 +118,8 @@ const canvas = document.getElementById("pizzagame");
 		const defaultpizzax = 400;
 		const defaultpizzay = 200;
 
-        const toppingpositionsx = [225, 400, 225, 400, 350];
-        const toppingpositionsy = [50, 50, 200, 200, 150];
+        const toppingpositionsx = [250, 375, 250, 375, 350];
+        const toppingpositionsy = [75, 75, 175, 175, 150];
 
 		let pizzax = 0;
 		let pizzay = 0;
@@ -130,7 +130,8 @@ const canvas = document.getElementById("pizzagame");
 			"mayo.png", "onions.png", "pepperoni.png", "tomato.png", "alfredo.png", "anchovies.png",
 			"car.png", "grape.png", "mozzarella.png", "olive.png", "pineapple.png", "ranch.png",
 			"bacon.png", "bellpepper.png", "buffalo.png", "crowbar.png", "jalapeno.png", "pickle.png",
-			"sausage.png"
+			"sausage.png", "pizza.png", "bleu.png", "apple.png", "pear.png", "garlic.png", "basil.png",
+			"tofu.png", "pesto.png", "crust.png" 
 			]
 		let imagestoload = srcarray.length;		// This integer will be used to check if every graphic has been loaded before launching the game.
 
@@ -324,11 +325,7 @@ const canvas = document.getElementById("pizzagame");
 
 
 		function drawcrust(x, y){
-			render.beginPath();
-			render.arc(x, y, 175, 0, 2 * Math.PI);
-			render.fillStyle = "#DBBB6D";
-			render.fill();
-			render.closePath();
+			render.drawImage(graphicdict.get("crust.png"), x-175, y-175);
 		}
 
 
@@ -500,10 +497,10 @@ const canvas = document.getElementById("pizzagame");
 							completeingredientarray.push(removedword.word);
 							score += removedword.score;
 							sethighscore();
-							if (removedword.graphic != "") {
+							if (removedword.graphic !== "") {
 								droptoppings(removedword.graphic);
+								extraLife();						// extraLife is here because otherwise you would get extra lives from commas.
 							}
-							extraLife();
 						}
 
 						if(incompleteingredientarray.length == 0){																// Player has completed order.
