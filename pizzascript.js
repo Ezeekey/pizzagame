@@ -9,7 +9,7 @@ const canvas = document.getElementById("pizzagame");
 		let successcount = 0;					// How many successful orders have been made by the player.
 		const LEVELUPTHRESHOLD = 5;				// How many successful orders must be made before the game adds more words to order.
 		const NORMALSCOREVALUE = 10;
-		const EXTRALIFESCORE = 400;				// What score the player needs to get to earn an extra life.
+		const EXTRALIFESCORE = 300;				// What score the player needs to get to earn an extra life.
 
 		let framestarttime = Date.now();
 		let lastframetime = Date.now();
@@ -109,6 +109,7 @@ const canvas = document.getElementById("pizzagame");
 		successSound = "sounds/success.mp3";
 		clickSound = "sounds/click.mp3";
 		tooSlowSound = "sounds/tooslow.mp3";
+		extraLifeSound = "sounds/extralife.mp3";
 
 		volume = 10;
 
@@ -502,6 +503,7 @@ const canvas = document.getElementById("pizzagame");
 							if (removedword.graphic != "") {
 								droptoppings(removedword.graphic);
 							}
+							extraLife();
 						}
 
 						if(incompleteingredientarray.length == 0){																// Player has completed order.
@@ -599,12 +601,10 @@ const canvas = document.getElementById("pizzagame");
 		}
 
 		function extraLife() {
-			// Checks if the player has earned 400 points. If so, then check if the player has less than three lives. If so, give extra life.
-			if ( score % EXTRALIFESCORE === 0) {
-				if (lives < 3) {
-					lives++;
-					playsound(extraLifeSound);
-				}
+			// Checks if the player has earned a certain amount of points. If so, then check if the player has less than three lives. If so, give extra life.
+			if ( score % EXTRALIFESCORE === 0 && lives < 3) {
+				lives++;
+				playsound(extraLifeSound);
 			}
 		}
 
