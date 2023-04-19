@@ -104,12 +104,12 @@ const GAMEOVER = 9;
 const BEFORETYPING = 10;
 
 // Sounds
-dingSound = "sounds/orderbell.mp3";
-failSound = "sounds/no.mp3";
-successSound = "sounds/success.mp3";
-clickSound = "sounds/click.mp3";
-tooSlowSound = "sounds/tooslow.mp3";
-extraLifeSound = "sounds/extralife.mp3";
+const dingSound = "sounds/orderbell.mp3";
+const failSound = "sounds/no.mp3";
+const successSound = "sounds/success.mp3";
+const clickSound = "sounds/click.mp3";
+const tooSlowSound = "sounds/tooslow.mp3";
+const extraLifeSound = "sounds/extralife.mp3";
 
 volume = 10;
 
