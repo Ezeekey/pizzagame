@@ -103,6 +103,7 @@ const BEFORECREATEPIZZA = 8;
 const GAMEOVER = 9;
 const BEFORETYPING = 10;
 
+/*
 // Sounds
 const dingSound = "sounds/orderbell.mp3";
 const failSound = "sounds/no.mp3";
@@ -110,6 +111,7 @@ const successSound = "sounds/success.mp3";
 const clickSound = "sounds/click.mp3";
 const tooSlowSound = "sounds/tooslow.mp3";
 const extraLifeSound = "sounds/extralife.mp3";
+*/
 
 volume = 10;
 
@@ -125,7 +127,7 @@ let pizzax = 0;
 let pizzay = 0;
 
 window.requestAnimationFrame(drawgame);
-let srcarray = [
+const srcarray = [
 	"check.png", "x.png", "dummy.png", "beans.png", "chicken.png", "ham.png", "macaroni.png",
 	"mayo.png", "onions.png", "pepperoni.png", "tomato.png", "alfredo.png", "anchovies.png",
 	"car.png", "grape.png", "mozzarella.png", "olive.png", "pineapple.png", "ranch.png",
@@ -136,6 +138,7 @@ let srcarray = [
 let imagestoload = srcarray.length;		// This integer will be used to check if every graphic has been loaded before launching the game.
 
 let graphicdict = new Map();
+
 
 function populategraphicmap() {
 	srcarray.forEach((element) => {
@@ -153,6 +156,19 @@ function populategraphicmap() {
 
 		graphicdict.set(element, newimage);
 	})
+}
+
+
+function createAudioMap(fileNames) {
+	const finalMap = new Map();
+
+	for (file of fileNames) {
+		const audio = new Audio();
+		audio.src = "sounds/" + file;
+		finalMap.set(file, audio);
+	}
+
+	return finalMap;
 }
 
 
@@ -179,7 +195,7 @@ function drawgame() {
 			break;
 		case BEFORETYPING:
 			filltextlists();
-			playsound(dingSound);
+			playsound("orderbell.mp3");
 			state = TYPING;
 
 			render.clearRect(0, 0, 800, 600);
@@ -195,7 +211,7 @@ function drawgame() {
 			// Game logic is in keyboard event handler towards bottom of file.
 
 			if (framestarttime > orderendtime) {
-				faillogic(tooSlowSound);
+				faillogic("tooslow.mp3");
 			}
 
 			render.clearRect(0, 0, 800, 600);
@@ -476,7 +492,7 @@ function drawtitle() {
 
 function playsound(sound) {
 	let playedsound = document.createElement("audio");
-	playedsound.src = sound;
+	playedsound.src = audioMap.get(sound).src;
 	playedsound.volume = volume / 10;
 	document.body.appendChild(playedsound);
 	playedsound.play();
@@ -493,7 +509,7 @@ document.addEventListener("keydown", (event) => {
 		case TYPING:
 			if (event.key === incompleteingredientarray[0].word.charAt(incompleteingredientarray[0].currentletter)) {	// Player has typed highlighted letter.
 				incompleteingredientarray[0].currentletter += 1;
-				playsound(clickSound);
+				playsound("click.mp3");
 
 				if (incompleteingredientarray[0].currentletter == incompleteingredientarray[0].word.length)				// Player has completed a word.
 				{
@@ -508,7 +524,7 @@ document.addEventListener("keydown", (event) => {
 				|| event.key === "ArrowUp" || event.key === "ArrowDown") { 						// Exclude other inputs like tab, control, and alt so player does not lose score.
 				// Do nothing.
 			} else {								// Player fails at typing highlighted letter.
-				faillogic(failSound);
+				faillogic("no.mp3");
 			}
 			break;
 		case TITLE:
@@ -520,10 +536,10 @@ document.addEventListener("keydown", (event) => {
 
 	if (event.key === "ArrowUp") {
 		volume < 10 ? volume += 1 : volume = 10;
-		playsound(clickSound);
+		playsound("click.mp3");
 	} else if (event.key === "ArrowDown") {
 		volume > 0 ? volume -= 1 : volume = 0;
-		playsound(clickSound);
+		playsound("click.mp3");
 	}
 
 	if ((event.key === " " || event.key === "ArrowDown" || event.key === "ArrowUp") && event.target === document.body) {		// Prevents page from scrolling down when player presses spacebar. 
@@ -570,7 +586,7 @@ function successlogic() {
 	state = SUCCESS;
 	successcount++;
 	completeingredientarray = [];
-	playsound(successSound);
+	playsound("success.mp3");
 
 	if (successcount >= LEVELUPTHRESHOLD) {
 		// Add extra word for every order, then reset the counter.
@@ -605,7 +621,7 @@ function extraLife() {
 	// Checks if the player has earned a certain amount of points. If so, then check if the player has less than three lives. If so, give extra life.
 	if (score % EXTRALIFESCORE === 0 && lives < 3) {
 		lives++;
-		playsound(extraLifeSound);
+		playsound("extralife.mp3");
 	}
 }
 
@@ -623,5 +639,6 @@ function completeWordLogic() {
 
 // Game start
 populategraphicmap();
+const audioMap = createAudioMap(["click.mp3", "extralife.mp3", "no.mp3", "orderbell.mp3", "success.mp3", "tooslow.mp3"]);
 filltextlists();
 srcarray.splice(0, srcarray.length);		// Erase unused by this point array to save memory.
