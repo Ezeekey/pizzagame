@@ -615,7 +615,7 @@ function completeWordLogic() {
 	completeingredientarray.push(removedword.word);
 	score += removedword.score;
 	sethighscore();
-	if (removedword.graphic !== "") {
+	if (removedword.graphic !== "") {		// Check if word is not a comma.
 		droptoppings(removedword.graphic);
 		extraLife();						// extraLife is here because otherwise you would get extra lives from commas.
 	}
@@ -624,3 +624,4 @@ function completeWordLogic() {
 // Game start
 populategraphicmap();
 filltextlists();
+srcarray.splice(0, srcarray.length);		// Erase unused by this point array to save memory.
