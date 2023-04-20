@@ -22,11 +22,11 @@ let lives = 3;
 let state = 0;
 
 
-let completeingredientarray = [];
+const completeingredientarray = [];
 
-let incompleteingredientarray = [];
+const incompleteingredientarray = [];
 
-let toppingarray = [];	// Should contain objects like this {graphic: '', x:0, y:0}
+const toppingarray = [];	// Should contain objects like this {graphic: '', x:0, y:0}
 
 // List of words.
 const wordlist = [
@@ -550,12 +550,16 @@ document.addEventListener("keydown", (event) => {
 
 function generateorder() {
 	let remainingwords = wordsperorder;
-	incompleteingredientarray = [];
-	toppingarray = [];
+	incompleteingredientarray.splice(0, incompleteingredientarray.length);
+	toppingarray.splice(0, toppingarray.length);
 
 	// Pick random word from list, reduce remainingwords by 1, and capitalizes first word.
 	let randomnumber = Math.floor(Math.random() * WORDLISTLENGTH);
+
+	// Getting word.
 	let newword = wordlist[randomnumber]["word"];
+
+	// Captialization.
 	const firstletter = newword.charAt(0).toUpperCase();
 	const restofword = newword.slice(1);
 
@@ -584,7 +588,7 @@ function successlogic() {
 	// Add success, and erase ingredient array.
 	state = SUCCESS;
 	successcount++;
-	completeingredientarray = [];
+	completeingredientarray.splice(0, completeingredientarray.length);
 	playsound("success.mp3");
 
 	if (successcount >= LEVELUPTHRESHOLD) {
@@ -597,7 +601,7 @@ function successlogic() {
 function faillogic(sound) {		// Has sound parameter to allow more then one sound.
 	// Erase list, and subtract life.
 	state = FAIL;
-	completeingredientarray = [];
+	completeingredientarray.splice(0, completeingredientarray.length);
 	lives--;
 	playsound(sound);
 }
