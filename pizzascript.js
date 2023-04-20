@@ -163,8 +163,7 @@ function createAudioMap(fileNames) {
 	const finalMap = new Map();
 
 	for (file of fileNames) {
-		const audio = new Audio();
-		audio.src = "sounds/" + file;
+		const audio = new Audio("sounds/" + file);
 		finalMap.set(file, audio);
 	}
 
