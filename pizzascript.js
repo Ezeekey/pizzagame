@@ -532,9 +532,10 @@ document.addEventListener("keydown", (event) => {
 		playsound("click.mp3");
 	}
 
-	if ((event.key === " " || event.key === "ArrowDown" || event.key === "ArrowUp") && event.target === document.body) {		// Prevents page from scrolling down when player presses spacebar. 
+	if ((event.key === " " || event.key === "ArrowDown" || event.key === "ArrowUp")) {		// Prevents page from scrolling down when player presses spacebar. 
 		event.preventDefault();
 	}
+
 })
 
 

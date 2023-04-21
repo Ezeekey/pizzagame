@@ -46,3 +46,11 @@ footer {
 
     background-color: silver;
 }
+
+button {
+    text-align: center;
+    margin: 10px;
+    margin-left: 50%;
+    margin-right: auto;
+    display: inline;
+}
