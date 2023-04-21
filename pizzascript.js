@@ -19,11 +19,7 @@ const STANDARDORDERTIME = 12000;		// Amount of time player has to type order.
 
 let lives = 3;
 
-let state = 0;
-
-
 const completeingredientarray = [];
-
 const incompleteingredientarray = [];
 
 const toppingarray = [];	// Should contain objects like this {graphic: '', x:0, y:0}
@@ -63,8 +59,6 @@ const wordlist = [
 	{ "word": "pesto", "graphic": "pesto.png" }
 ];
 
-const WORDLISTLENGTH = wordlist.length;
-
 // Order text
 let orderlinegreen =
 	["",
@@ -103,15 +97,7 @@ const BEFORECREATEPIZZA = 8;
 const GAMEOVER = 9;
 const BEFORETYPING = 10;
 
-/*
-// Sounds
-const dingSound = "sounds/orderbell.mp3";
-const failSound = "sounds/no.mp3";
-const successSound = "sounds/success.mp3";
-const clickSound = "sounds/click.mp3";
-const tooSlowSound = "sounds/tooslow.mp3";
-const extraLifeSound = "sounds/extralife.mp3";
-*/
+let state = LOADING;
 
 volume = 10;
 
@@ -438,6 +424,7 @@ function cleartextgraphics() {
 	orderlineblack = ["", "", "", "", "", "", ""];
 }
 
+
 function filltextlists() {
 	let currentline = 0;
 	let wordnumber = 0;
@@ -480,6 +467,7 @@ function filltextlists() {
 	}
 }
 
+
 function drawtitle() {
 	render.font = "80px serif";
 	render.fillStyle = "black";
@@ -488,6 +476,7 @@ function drawtitle() {
 	render.fillText("Press space to play", 150, 425);
 	render.fillText("Press up and down arrows to change volume", 25, 550);
 }
+
 
 function playsound(sound) {
 	let playedsound = document.createElement("audio");
@@ -501,7 +490,9 @@ function playsound(sound) {
 	}
 }
 
+
 // Input.
+
 
 document.addEventListener("keydown", (event) => {
 	switch (state) {
@@ -546,7 +537,9 @@ document.addEventListener("keydown", (event) => {
 	}
 })
 
+
 // Game logic
+
 
 function generateorder() {
 	let remainingwords = wordsperorder;
@@ -554,7 +547,7 @@ function generateorder() {
 	toppingarray.splice(0, toppingarray.length);
 
 	// Pick random word from list, reduce remainingwords by 1, and capitalizes first word.
-	let randomnumber = Math.floor(Math.random() * WORDLISTLENGTH);
+	let randomnumber = Math.floor(Math.random() * wordlist.length);
 
 	// Getting word.
 	let newword = wordlist[randomnumber]["word"];
@@ -575,7 +568,7 @@ function generateorder() {
 		incompleteingredientarray.push({ "word": ", ", "currentletter": 0, "graphic": "", "score": 0 });
 
 		// Add word.
-		randomnumber = Math.floor(Math.random() * WORDLISTLENGTH);
+		randomnumber = Math.floor(Math.random() * wordlist.length);
 		incompleteingredientarray.push({
 			"word": wordlist[randomnumber].word, "currentletter": 0,
 			"graphic": wordlist[randomnumber].graphic, "score": NORMALSCOREVALUE
@@ -583,6 +576,7 @@ function generateorder() {
 		remainingwords--;
 	}
 }
+
 
 function successlogic() {
 	// Add success, and erase ingredient array.
@@ -598,6 +592,7 @@ function successlogic() {
 	}
 }
 
+
 function faillogic(sound) {		// Has sound parameter to allow more then one sound.
 	// Erase list, and subtract life.
 	state = FAIL;
@@ -605,6 +600,7 @@ function faillogic(sound) {		// Has sound parameter to allow more then one sound
 	lives--;
 	playsound(sound);
 }
+
 
 function startgame() {
 	state = BEFORECREATEPIZZA;
@@ -614,11 +610,13 @@ function startgame() {
 	wordsperorder = 1;
 }
 
+
 function sethighscore() {
 	if (score > highscore) {
 		highscore = score;
 	}
 }
+
 
 function extraLife() {
 	// Checks if the player has earned a certain amount of points. If so, then check if the player has less than three lives. If so, give extra life.
@@ -639,6 +637,7 @@ function completeWordLogic() {
 		extraLife();						// extraLife is here because otherwise you would get extra lives from commas.
 	}
 }
+
 
 // Game start
 populategraphicmap();
