@@ -24,6 +24,8 @@ const incompleteingredientarray = [];
 
 const toppingarray = [];	// Should contain objects like this {graphic: '', x:0, y:0}
 
+let clicked = false;
+
 // List of words.
 const wordlist = [
 	{ "word": "pepperoni", "graphic": "pepperoni.png" },
@@ -91,6 +93,7 @@ const LOADING = 0;
 const TITLE = 1;
 const CREATEPIZZA = 2;
 const TYPING = 3;
+const CLICKTOPLAY = 4;
 const SUCCESS = 5;
 const FAIL = 7;
 const BEFORECREATEPIZZA = 8;
@@ -133,7 +136,7 @@ function populategraphicmap() {
 		newimage.onload = function () {
 			imagestoload -= 1;
 			if (imagestoload <= 0) {
-				state = TITLE;
+				state = CLICKTOPLAY;
 				filltextlists();
 			}
 		}
@@ -191,6 +194,14 @@ function drawgame() {
 			drawlives();
 			drawscore();
 			drawSoundVolume();
+			break;
+		case CLICKTOPLAY:
+			render.clearRect(0, 0, 800, 600);
+			drawclickscreen();
+
+			if ( clicked === true) {
+				state = TITLE;
+			}
 			break;
 		case TYPING:
 			// Game logic is in keyboard event handler towards bottom of file.
@@ -306,6 +317,20 @@ function drawloadscreen() {
 	render.fillStyle = "white";
 	render.fillText("Loading...", 100, 100);
 }
+
+
+function drawclickscreen() {
+	render.beginPath();
+	render.rect(0, 0, 800, 600);
+	render.fillStyle = "black";
+	render.fill();
+	render.closePath();
+
+	render.font = "60px serif";
+	render.fillStyle = "white";
+	render.fillText("Click to start", 100, 100);
+}
+
 
 
 function drawbackground() {
@@ -536,6 +561,11 @@ document.addEventListener("keydown", (event) => {
 		event.preventDefault();
 	}
 
+})
+
+
+document.addEventListener("click", event => {
+	clicked = true;
 })
 
 
