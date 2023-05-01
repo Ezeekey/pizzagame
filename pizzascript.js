@@ -549,10 +549,10 @@ document.addEventListener("keydown", (event) => {
 			break;
 	}
 
-	if (event.key === "ArrowUp") {
+	if (event.key === "ArrowUp" && clicked === true) {
 		volume < 10 ? volume += 1 : volume = 10;
 		playsound("click.mp3");
-	} else if (event.key === "ArrowDown") {
+	} else if (event.key === "ArrowDown" && clicked === true) {
 		volume > 0 ? volume -= 1 : volume = 0;
 		playsound("click.mp3");
 	}
