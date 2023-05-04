@@ -19,8 +19,8 @@ const STANDARDORDERTIME = 12000;		// Amount of time player has to type order.
 
 let lives = 3;
 
-const completeingredientarray = [];
-const incompleteingredientarray = [];
+const completeingredientarray = [];		// Array of strings
+const incompleteingredientarray = [];	// Array of objects.
 
 const toppingarray = [];	// Should contain objects like this {graphic: '', x:0, y:0}
 
@@ -199,7 +199,7 @@ function drawgame() {
 			render.clearRect(0, 0, 800, 600);
 			drawclickscreen();
 
-			if ( clicked === true) {
+			if (clicked === true) {
 				state = TITLE;
 			}
 			break;
@@ -375,6 +375,45 @@ function draworder() {
 	}
 
 }
+
+
+function newDrawOrderListGenerator() {	// TODO: Work here
+	// Create string of completed items.
+	let completeWords = [];
+	let currentString = '';
+	let incompleteWords = [];
+
+	// Go through complete words
+	for (let word of completeingredientarray) {
+		// Go through every word that has been totally complete.
+		completeWords.push(word);
+	}
+
+	// Go through incomplete words.
+	for (let item of incompleteingredientarray) {
+		// Go through one letter at a time for first word.
+		if (item.currentletter > 0) {
+			// Word has been partially typed.
+
+			// Already typed letters.
+			completeWords.push(item.word.slice(0, item.currentletter));
+
+			// Current character.
+			currentString = item.word.charAt(item.currentletter);
+
+			// Rest of word.
+			incompleteWords.push(item.word.slice(item.currentletter + 1, item.word.length));
+		} else {
+			// Word has not been gotten to.
+			incompleteWords.push(item.word);
+		}
+	}
+	// Return an object containing every word.
+	return { completeWords: completeWords, currentLetter: currentString, incompleteWords: incompleteWords };
+}
+
+
+
 
 function drawgameover() {
 	render.font = "60px serif";
