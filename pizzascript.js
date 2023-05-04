@@ -189,7 +189,8 @@ function drawgame() {
 			render.clearRect(0, 0, 800, 600);
 			drawbackground();
 			drawcrust(defaultpizzax, defaultpizzay);
-			draworder();
+			// draworder();
+			newDrawText(newDrawOrderListGenerator(), incompleteingredientarray[0].currentLetter, incompleteingredientarray[0].word.length)
 			drawtimer();
 			drawlives();
 			drawscore();
@@ -214,7 +215,8 @@ function drawgame() {
 			drawbackground();
 			drawcrust(defaultpizzax, defaultpizzay);
 			drawtoppings();
-			draworder();
+			//draworder();
+			newDrawText(newDrawOrderListGenerator(), incompleteingredientarray[0].currentLetter, incompleteingredientarray[0].word.length)
 			drawtimer();
 			drawlives();
 			drawscore();
@@ -377,7 +379,7 @@ function draworder() {
 }
 
 
-function newDrawOrderListGenerator() {	// TODO: Work here
+function newDrawOrderListGenerator() {
 	// Create string of completed items.
 	let completeWords = [];
 	let currentString = '';
@@ -390,29 +392,115 @@ function newDrawOrderListGenerator() {	// TODO: Work here
 	}
 
 	// Go through incomplete words.
-	for (let item of incompleteingredientarray) {
-		// Go through one letter at a time for first word.
-		if (item.currentletter > 0) {
-			// Word has been partially typed.
+	for (let i = 0; i < incompleteingredientarray.length; i++) {
+		// It is the first word of the array. It needs the red letter.
 
+		if (i === 0) {
 			// Already typed letters.
-			completeWords.push(item.word.slice(0, item.currentletter));
+			completeWords.push(incompleteingredientarray[i].word.slice(0, incompleteingredientarray[i].currentletter));
 
 			// Current character.
-			currentString = item.word.charAt(item.currentletter);
+			currentString = incompleteingredientarray[i].word.charAt(incompleteingredientarray[i].currentletter);
 
 			// Rest of word.
-			incompleteWords.push(item.word.slice(item.currentletter + 1, item.word.length));
+			incompleteWords.push(incompleteingredientarray[i].word.slice(incompleteingredientarray[i].currentletter + 1, incompleteingredientarray[i].word.length));
 		} else {
 			// Word has not been gotten to.
-			incompleteWords.push(item.word);
+			incompleteWords.push(incompleteingredientarray[i].word);
 		}
 	}
+
 	// Return an object containing every word.
 	return { completeWords: completeWords, currentLetter: currentString, incompleteWords: incompleteWords };
 }
 
 
+function newDrawText(textObject, currentWordLetter, currentWordLength) {
+	let horizontalWordCount = 0;	// Declare how many words there are per line.
+	let line = 0;					// Declare line that order is on.
+	let startX = 0;					// Where the next word will start x wise.
+
+	// Set up render
+	render.font = "20px courier";
+
+	// Set render for complete words.
+	render.fillStyle = "green";
+
+	// Draw totally complete words
+	for (let i = 0; i < textObject.completeWords.length - 1; i++) {
+		const item = textObject.completeWords[i];
+		// Draw green text
+		render.fillText(item, 10 + startX, 430 + (24 * line));
+
+		// Check if horizontalWordCount is over 7. This is to keep the order from going off the page.
+		horizontalWordCount++;
+
+		if (horizontalWordCount > 7) {
+			// Starting new line.
+			startX = 0;
+			line++;
+			horizontalWordCount = 0;
+		} else {
+			// Staying on current line.
+			startX += render.measureText(item).width;
+		}
+	}
+
+	// Draw current word.
+
+	// Check if there are any letters to turn green.
+	if (textObject.completeWords.length > 0) {
+		// There are green letter in current word.
+		render.fillText(textObject.completeWords[textObject.completeWords.length - 1], 10 + startX, 430 + (24 * line));
+		startX += render.measureText(textObject.completeWords[textObject.completeWords.length - 1]).width;
+	}
+	// Set render to draw red text.
+	render.fillStyle = "red";
+
+	// Draw red letter.
+	render.fillText(textObject.currentLetter, 10 + startX, 430 + (24 * line));
+	startX += render.measureText(textObject.currentLetter).width;
+
+	// Set render to draw black text.
+	render.fillStyle = "black";
+
+	// Draw black letters if there are any for first word.
+	if (currentWordLetter < currentWordLength - 1) {
+		// There are black letters to draw in first word.
+		render.fillText(textObject.incompleteWords[0], 10 + startX, 430 + (24 * line));
+		startX += render.measureText(textObject.incompleteWords[0]).width;
+	}
+
+	// Check if new line is needed.
+	horizontalWordCount++;
+	if (horizontalWordCount > 7) {
+		// Starting new line.
+		startX = 0;
+		line++;
+		horizontalWordCount = 0;
+	}
+
+	// Drawing incomplete words.
+	for (let i = 0; i < textObject.incompleteWords.length; i++) {
+		// Skip the first word if it is current.
+		if (currentWordLetter < currentWordLength - 1 && i === 0) {
+			continue;
+		}
+		render.fillText(textObject.incompleteWords[i], 10 + startX, 430 + (24 * line));
+
+		// Check if new line is needed.
+		horizontalWordCount++;
+		if (horizontalWordCount > 7) {
+			// Starting new line.
+			startX = 0;
+			line++;
+			horizontalWordCount = 0;
+		} else {
+			// Continue line.
+			startX += render.measureText(textObject.incompleteWords[i]).width;
+		}
+	}
+}
 
 
 function drawgameover() {
@@ -565,7 +653,7 @@ document.addEventListener("keydown", (event) => {
 				incompleteingredientarray[0].currentletter += 1;
 				playsound("click.mp3");
 
-				if (incompleteingredientarray[0].currentletter == incompleteingredientarray[0].word.length)				// Player has completed a word.
+				if (incompleteingredientarray[0].currentletter === incompleteingredientarray[0].word.length)				// Player has completed a word.
 				{
 					completeWordLogic();
 				}
