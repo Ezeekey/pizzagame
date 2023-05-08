@@ -61,32 +61,6 @@ const wordlist = [
 	{ "word": "pesto", "graphic": "pesto.png" }
 ];
 
-// Order text
-let orderlinegreen =
-	["",
-		"",
-		"",
-		"",
-		"",
-		"",
-		""];
-let orderlinered =
-	["",
-		"",
-		"",
-		"",
-		"",
-		"",
-		""];
-let orderlineblack =
-	["",
-		"",
-		"",
-		"",
-		"",
-		"",
-		""];
-
 
 // Enumerations for the state machine.
 const LOADING = 0;
@@ -137,7 +111,6 @@ function populategraphicmap() {
 			imagestoload -= 1;
 			if (imagestoload <= 0) {
 				state = CLICKTOPLAY;
-				filltextlists();
 			}
 		}
 
@@ -182,14 +155,12 @@ function drawgame() {
 			drawSoundVolume();
 			break;
 		case BEFORETYPING:
-			filltextlists();
 			playsound("orderbell.mp3");
 			state = TYPING;
 
 			render.clearRect(0, 0, 800, 600);
 			drawbackground();
 			drawcrust(defaultpizzax, defaultpizzay);
-			// draworder();
 			newDrawText(newDrawOrderListGenerator(), incompleteingredientarray[0].currentLetter, incompleteingredientarray[0].word.length)
 			drawtimer();
 			drawlives();
@@ -215,7 +186,6 @@ function drawgame() {
 			drawbackground();
 			drawcrust(defaultpizzax, defaultpizzay);
 			drawtoppings();
-			//draworder();
 			newDrawText(newDrawOrderListGenerator(), incompleteingredientarray[0].currentLetter, incompleteingredientarray[0].word.length)
 			drawtimer();
 			drawlives();
@@ -283,7 +253,7 @@ function drawgame() {
 			drawlives();
 			drawcrust(defaultpizzax, defaultpizzay + pizzay)
 			drawtoppings();
-			draworder();
+			newDrawText(newDrawOrderListGenerator(), incompleteingredientarray[0].currentLetter, incompleteingredientarray[0].word.length)
 			drawscore();
 			drawSoundVolume();
 			break;
@@ -354,28 +324,6 @@ function drawbackground() {
 
 function drawcrust(x, y) {
 	render.drawImage(graphicdict.get("crust.png"), x - 175, y - 175);
-}
-
-
-function draworder() {
-	const BEGINLINE = 10;
-	let textstart = BEGINLINE;
-
-	for (let i = 0; i < 7; i++) {
-		render.font = "20px courier";
-		render.fillStyle = "green";
-		render.fillText(orderlinegreen[i], 10, 430 + (24 * i));
-		measure = render.measureText(orderlinegreen[i]);
-		textstart += measure.width;
-		render.fillStyle = "red";
-		render.fillText(orderlinered[i], textstart, 430 + (24 * i));
-		measure = render.measureText(orderlinered[i]);
-		textstart += measure.width;
-		render.fillStyle = "black";
-		render.fillText(orderlineblack[i], textstart, 430 + (24 * i));
-		textstart = BEGINLINE;
-	}
-
 }
 
 
@@ -577,49 +525,6 @@ function cleartextgraphics() {
 }
 
 
-function filltextlists() {
-	let currentline = 0;
-	let wordnumber = 0;
-
-	// Erase all graphic text lists.
-	cleartextgraphics();
-
-	function addwordnumber() {
-		wordnumber += 1;
-
-		if (wordnumber > 9) {
-			wordnumber = 0;
-			currentline += 1;
-		}
-	}
-
-	for (i = 0; i < completeingredientarray.length; i++) {			// Counting all completed words.
-		orderlinegreen[currentline] += completeingredientarray[i];
-		addwordnumber();
-	}
-	if (incompleteingredientarray.length > 0) {
-		for (i = 0; i < incompleteingredientarray[0].word.length; i++) {	// Building the first word
-			if (i < incompleteingredientarray[0].currentletter) {									// Already typed letters.
-				orderlinegreen[currentline] += (incompleteingredientarray[0].word.charAt(i));
-			}
-			else if (i == incompleteingredientarray[0].currentletter) {							// Current letter to type.
-				orderlinered[currentline] += (incompleteingredientarray[0].word.charAt(i));
-			}
-			else {																				// Letters that haven't been typed yet.
-				orderlineblack[currentline] += (incompleteingredientarray[0].word.charAt(i));
-			}
-		}
-	}
-
-	addwordnumber();
-
-	for (i = 1; i < incompleteingredientarray.length; i++) {									// Counting all words that haven't been typed.
-		orderlineblack[currentline] += (incompleteingredientarray[i].word);
-		addwordnumber();
-	}
-}
-
-
 function drawtitle() {
 	render.font = "80px serif";
 	render.fillStyle = "black";
@@ -661,7 +566,6 @@ document.addEventListener("keydown", (event) => {
 				if (incompleteingredientarray.length == 0) {																// Player has completed order.
 					successlogic();
 				}
-				filltextlists();
 			} else if (event.key === "Control" || event.key === "Alt" || event.key === "Tab" || event.key === "Shift"
 				|| event.key === "ArrowUp" || event.key === "ArrowDown") { 						// Exclude other inputs like tab, control, and alt so player does not lose score.
 				// Do nothing.
@@ -702,6 +606,7 @@ document.addEventListener("click", event => {
 function generateorder() {
 	let remainingwords = wordsperorder;
 	incompleteingredientarray.splice(0, incompleteingredientarray.length);
+	completeingredientarray.splice(0, completeingredientarray.length);
 	toppingarray.splice(0, toppingarray.length);
 
 	// Pick random word from list, reduce remainingwords by 1, and capitalizes first word.
@@ -754,7 +659,6 @@ function successlogic() {
 function faillogic(sound) {		// Has sound parameter to allow more then one sound.
 	// Erase list, and subtract life.
 	state = FAIL;
-	completeingredientarray.splice(0, completeingredientarray.length);
 	lives--;
 	playsound(sound);
 }
@@ -800,5 +704,4 @@ function completeWordLogic() {
 // Game start
 populategraphicmap();
 const audioMap = createAudioMap(["click.mp3", "extralife.mp3", "no.mp3", "orderbell.mp3", "success.mp3", "tooslow.mp3"]);
-filltextlists();
 srcarray.splice(0, srcarray.length);		// Erase unused by this point array to save memory.
